@@ -1,0 +1,19 @@
+{
+    "name": "dev/mo",
+    "description": "devmo",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Dev\\Mo\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "MohamedFathi212",
+            "email": "mf974476@gmail.com"
+        }
+    ],
+    "require": {
+        "filp/whoops": "^2.15"
+    }
+}
