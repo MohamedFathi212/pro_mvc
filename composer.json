@@ -6,6 +6,10 @@
         "psr-4": {
             "Dev\\Mo\\": "src/"
         }
+        ,"files":[
+            "src/routes/web.php"
+        ]
+        
     },
     "authors": [
         {
@@ -14,6 +18,7 @@
         }
     ],
     "require": {
-        "filp/whoops": "^2.15"
+        "filp/whoops": "^2.15",
+        "jenssegers/blade": "^1.4.0"
     }
 }

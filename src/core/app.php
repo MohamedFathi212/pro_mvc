@@ -1,6 +1,7 @@
 <?php
 
 namespace Dev\Mo\core;
+use Exception;
 
 class app {
 
@@ -40,10 +41,10 @@ class app {
             if (method_exists($controller, $this->method)) {
                 call_user_func_array([$controller, $this->method], []);
             } else {
-                throw new \Exception("Method $this->method not found in Class ");
+                throw new \Exception("Method $this->method not found in Class");
             }
         } else {
-            throw new \Exception("Class  not found");
+            throw new \Exception("Class not found");
         }
     }
 }

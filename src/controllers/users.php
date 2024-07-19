@@ -1,12 +1,12 @@
 <?php 
 
 namespace Dev\Mo\controllers;
-
-class users 
+class users extends controller
 {
     public function index()
     {
-        echo "text index";
+        $name="mohamed";
+        $this->view("home",compact('name'));
     }
 
     public function edit()
