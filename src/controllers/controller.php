@@ -14,7 +14,7 @@ class controller
 
     protected function view($page, $data)
     {
-        $blade = new Blade('../src/views', '../storage/cache');
+        $blade = new Blade($_ENV['VIEW_FOLDER'], $_ENV['VIEW_CACHE']);
         echo $blade->render($page, $data);
     }
 }

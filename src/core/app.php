@@ -7,6 +7,7 @@ class app {
 
     private $controller; 
     private $method; 
+    private $params=[];
 
     public function __construct()
     {
@@ -16,21 +17,28 @@ class app {
 
     private function url()
     {
-        if (!empty($_SERVER['QUERY_STRING']))
-        {
-            $url = $_SERVER['QUERY_STRING'];
-            $url = explode('/', $url);
-            
-            if (isset($url[0]) && $url[0] != "") {
-                $this->controller = $url[0];
-            }
-            
-            if (isset($url[1]) && $url[1] != "") {
-                $this->method = $url[1];
-            }
-        }
-    }
+        $url = $_SERVER['QUERY_STRING'];
 
+        $url = explode("/",$url);
+
+//        if(array_key_exists($url,route::$routes)){
+//
+//            $this->controller =   route::$routes[$url][0];
+//            $this->method = route::$routes[$url][1];
+//
+//        }else {
+//            echo "fail";
+//        }
+
+
+        $this->controller = (!empty($url[0])) ? $url[0] : $_ENV['DEFAULT_CLASS'];
+        $this->method = (!empty($url[1])) ? $url[1] : $_ENV['DEFAULT_METHOD'];
+
+        unset($url[0],$url[1]);
+
+        $this->params = $url;
+        }
+    
     private function run()
     {
         $controller = "Dev\\Mo\\controllers\\" . $this->controller;
@@ -39,7 +47,7 @@ class app {
             $controller = new $controller;
 
             if (method_exists($controller, $this->method)) {
-                call_user_func_array([$controller, $this->method], []);
+                call_user_func_array([$controller, $this->method],$this->params);
             } else {
                 throw new \Exception("Method $this->method not found in Class");
             }

@@ -1,16 +1,38 @@
 <?php 
 
 namespace Dev\Mo\controllers;
+
 class users extends controller
 {
     public function index()
     {
-        $name="mohamed";
-        $this->view("home",compact('name'));
+
+    }
+
+    public function create()
+    {
+        
+    }
+
+    public function store()
+    {
+        
     }
 
     public function edit()
     {
-        echo "test edit";
+        
+    }
+
+    public function update()
+    {
+        
+    }
+
+    public function delete()
+    {
+        
     }
 }
+
+

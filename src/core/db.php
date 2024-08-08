@@ -1,27 +1,18 @@
-<?php 
+<?php
+namespace Devmo\Mvc\core;
 
-namespace Dev\Mo\core;
-
-interface dbContract
-{
-    public function insert($data);
-    public function select($columns = "*");
-    public function update($data);
-    public function delete();
-    public function excute();
-}
-class db implements dbContract
+class db 
 {
     private $table;
-
     private $sql;
-
     private $connection;
-    public function __construct($host,$user,$password,$db,$table)
+
+    public function __construct($table)
     {
-        $this->connection = mysqli_connect($host,$user,$password,$db);
+        $this->connection = mysqli_connect($_ENV['DB_HOST'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], $_ENV['DB_NAME']);
         $this->table = $table;
     }
+
     public function insert($data)
     {
         $columns = "";
@@ -30,8 +21,8 @@ class db implements dbContract
             $columns .= "`$column`,";
             $values .= " '$value',";
         }
-        $columns = rtrim($columns,",");
-        $values = rtrim($values,",");
+        $columns = rtrim($columns, ",");
+        $values = rtrim($values, ",");
 
         $this->sql = "INSERT INTO $this->table ($columns) VALUES ($values)";
 
@@ -47,63 +38,79 @@ class db implements dbContract
     public function update($data)
     {
         $rows = "";
-
         foreach ($data as $column => $value) {
             $rows .= "`$column` = '$value',";
         }
-        $rows = rtrim($rows,",");
+        $rows = rtrim($rows, ",");
 
-        $this->sql = "UPDATE $this->table SET $rows ";
+        $this->sql = "UPDATE $this->table SET $rows";
 
         return $this;
     }
 
     public function delete()
     {
-        $this->sql = "DELETE FROM `$this->table` ";
+        $this->sql = "DELETE FROM `$this->table`";
         return $this;
     }
-    
 
-    public function excute()
+    public function join($type, $table, $pk, $fk)
     {
-        mysqli_query($this->connection,$this->sql);
+        $this->sql .= " $type JOIN `$table` ON $pk = $fk";
+        return $this;
+    }
+
+    public function innerJoin($table, $pk, $fk)
+    {
+        $this->join('inner', $table, $pk, $fk);
+        return $this;
+    }
+
+    public function leftJoin($table, $pk, $fk)
+    {
+        $this->join('left', $table, $pk, $fk);
+        return $this;
+    }
+
+    public function rightJoin($table, $pk, $fk)
+    {
+        $this->join('right', $table, $pk, $fk);
+        return $this;
+    }
+
+    public function execute()
+    {
+        mysqli_query($this->connection, $this->sql);
         return mysqli_affected_rows($this->connection);
     }
 
     public function all()
     {
-        $query =  mysqli_query($this->connection,$this->sql);
-        return mysqli_fetch_all($query,MYSQLI_ASSOC);
+        $query = mysqli_query($this->connection, $this->sql);
+        return mysqli_fetch_all($query, MYSQLI_ASSOC);
     }
 
     public function get()
     {
-        $query =  mysqli_query($this->connection,$this->sql);
+        $query = mysqli_query($this->connection, $this->sql);
         return mysqli_fetch_assoc($query);
     }
 
-    public function where($column,$operator,$value)
+    public function where($column, $operator, $value)
     {
         $this->sql .= " WHERE `$column` $operator '$value'";
         return $this;
     }
 
-    public function Andwhere($column,$operator,$value)
+    public function andWhere($column, $operator, $value)
     {
         $this->sql .= " AND `$column` $operator '$value'";
         return $this;
     }
 
-    public function Orwhere($column,$operator,$value)
+    public function orWhere($column, $operator, $value)
     {
         $this->sql .= " OR `$column` $operator '$value'";
-        return $this;
-    }
-
-    public function join($table, $on, $type = 'INNER')
-    {
-        $this->sql .= " $type JOIN $table ON $on";
         return $this;
     }
 }
